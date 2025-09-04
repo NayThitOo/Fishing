@@ -8,50 +8,86 @@
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      color: #ffffff;
-      background: url('https://images.unsplash.com/photo-1478479405421-ce83c92fb2c5?q=80&w=1600&auto=format&fit=crop') no-repeat center center fixed;
-      background-size: cover;
+      color: #00334d;
+      background: #b3e5fc; /* Baby blue background */
+      line-height: 1.6;
     }
     header {
-      background: rgba(0, 0, 0, 0.6);
+      background: #0288d1;
       padding: 20px;
       text-align: center;
+      color: #ffffff;
     }
     header h1 {
       margin: 0;
-      color: #ffcc00;
+      font-size: 2.5em;
+    }
+    nav {
+      margin-top: 10px;
     }
     nav a {
-      color: #00e5ff;
-      margin: 0 10px;
+      color: #ffeb3b;
+      margin: 0 15px;
       text-decoration: none;
       font-weight: bold;
+      font-size: 1.1em;
     }
     nav a:hover {
-      text-decoration: underline;
+      color: #ffffff;
+    }
+    main {
+      padding: 20px;
     }
     section {
-      background: rgba(0, 0, 0, 0.5);
-      margin: 20px;
+      background: #e1f5fe;
+      margin: 20px auto;
       padding: 20px;
-      border-radius: 10px;
+      border-radius: 12px;
+      max-width: 800px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
     h2 {
-      color: #ffcc00;
+      color: #0288d1;
+      margin-bottom: 10px;
+    }
+    ul {
+      list-style: square;
+      padding-left: 20px;
+    }
+    #gallery {
+      text-align: center;
+    }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-top: 15px;
+    }
+    .gallery-grid img {
+      width: 100%;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
     }
     footer {
       text-align: center;
-      background: rgba(0, 0, 0, 0.6);
-      padding: 10px;
+      background: #0288d1;
+      padding: 15px;
       margin-top: 20px;
-      color: #cccccc;
+      color: #ffffff;
+      font-size: 0.9em;
     }
   </style>
 </head>
 <body>
   <header>
     <h1>Fishing in Myanmar</h1>
-    
+    <nav>
+      <a href="#regions">Regions</a>
+      <a href="#species">Species</a>
+      <a href="#seasons">Seasons</a>
+      <a href="#tips">Tips</a>
+      <a href="#gallery">Gallery</a>
+    </nav>
   </header>
 
   <main>
@@ -67,6 +103,12 @@
 
     <section id="species">
       <h2>Popular Species</h2>
+      <ul>
+        <li>Catfish</li>
+        <li>Snakehead Fish</li>
+        <li>Tiger Prawn</li>
+        <li>Tilapia</li>
+      </ul>
     </section>
 
     <section id="seasons">
@@ -80,19 +122,26 @@
         <li>Check local rules and regulations</li>
         <li>Handle fish carefully</li>
         <li>Leave no trace</li>
+        <li>Respect local communities</li>
       </ul>
     </section>
 
     <section id="gallery">
       <h2>Photo Gallery</h2>
-      <p>(Place your fishing photos here)</p>
+      <div class="gallery-grid">
+        <img src="https://via.placeholder.com/400x250?text=Fishing+Photo+1" alt="Fishing Photo 1">
+        <img src="https://via.placeholder.com/400x250?text=Fishing+Photo+2" alt="Fishing Photo 2">
+        <img src="https://via.placeholder.com/400x250?text=Fishing+Photo+3" alt="Fishing Photo 3">
+      </div>
     </section>
   </main>
 
   <footer>
-    <p>&copy; 2025 Fishing in Myanmar</p>
+    <p>&copy; 2025 Fishing in Myanmar | All Rights Reserved</p>
   </footer>
 </body>
 </html>
+
+
 
 
