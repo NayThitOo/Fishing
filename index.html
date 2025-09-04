@@ -144,13 +144,147 @@
         
       </div>
     </section>
+    <div class="wrap">
+    <h1>📍 GPS Tracker (Myanmar)</h1>
+    <div class="card stack">
+      <div class="btns">
+        <button id="start" class="primary">Start Tracking</button>
+        <button id="stop" class="secondary" disabled>Stop</button>
+        <button id="copy" class="secondary" disabled>Copy Lat,Lng</button>
+        <a id="openMaps" class="ghost" href="#" target="_blank" rel="noopener" aria-disabled="true">Open in Google Maps</a>
+      </div>
+      <div class="status" id="status">Default view: Myanmar map. Click “Start Tracking”.</div>
+
+      <div class="row">
+        <div class="stack">
+          <div class="kv"><div class="k">Latitude</div><div class="v" id="lat">—</div></div>
+          <div class="kv"><div class="k">Longitude</div><div class="v" id="lng">—</div></div>
+          <div class="kv"><div class="k">Accuracy</div><div class="v" id="acc">—</div></div>
+          <div class="kv"><div class="k">Altitude</div><div class="v" id="alt">—</div></div>
+          <div class="kv"><div class="k">Speed</div><div class="v" id="spd">—</div></div>
+          <div class="kv"><div class="k">Heading</div><div class="v" id="hdg">—</div></div>
+        </div>
+        <div>
+          <!-- Default: centered on Myanmar -->
+          <iframe id="map" title="Map of Myanmar"
+            src="https://www.google.com/maps?q=21.9162,95.9560&z=6&output=embed"
+            loading="lazy"></iframe>
+        </div>
+      </div>
+    </div>
+    <p class="small" style="margin-top:12px;">
+      Works best with GPS-enabled devices. Requires HTTPS (or <code>localhost</code>) for location.
+    </p>
+  </div>
+
+  <script>
+    const el = id => document.getElementById(id);
+    const statusEl = el('status');
+    const latEl = el('lat');
+    const lngEl = el('lng');
+    const accEl = el('acc');
+    const altEl = el('alt');
+    const spdEl = el('spd');
+    const hdgEl = el('hdg');
+    const mapEl = el('map');
+    const startBtn = el('start');
+    const stopBtn = el('stop');
+    const copyBtn = el('copy');
+    const openMaps = el('openMaps');
+
+    let watchId = null;
+    let lastCoords = null;
+
+    function setButtons(running) {
+      startBtn.disabled = running;
+      stopBtn.disabled = !running;
+      copyBtn.disabled = !lastCoords;
+      openMaps.setAttribute('aria-disabled', !lastCoords);
+      openMaps.style.pointerEvents = lastCoords ? 'auto' : 'none';
+      openMaps.style.opacity = lastCoords ? 1 : 0.5;
+    }
+
+    function updateMap(lat, lng) {
+      const url = `https://www.google.com/maps?q=${lat},${lng}&z=15&output=embed`;
+      if (mapEl.src !== url) mapEl.src = url;
+      openMaps.href = `https://www.google.com/maps?q=${lat},${lng}`;
+    }
+
+    function handlePosition(pos) {
+      const { latitude, longitude, accuracy, altitude, speed, heading } = pos.coords;
+      lastCoords = { latitude, longitude };
+
+      latEl.textContent = latitude.toFixed(6);
+      lngEl.textContent = longitude.toFixed(6);
+      accEl.textContent = accuracy ? `${accuracy.toFixed(0)} m` : '—';
+      altEl.textContent = (altitude != null) ? `${altitude.toFixed(1)} m` : '—';
+      spdEl.textContent = (speed != null) ? `${(speed * 3.6).toFixed(1)} km/h` : '—';
+      hdgEl.textContent = (heading != null) ? `${heading.toFixed(0)}°` : '—';
+
+      updateMap(latitude, longitude);
+      statusEl.textContent = `Last update: ${new Date(pos.timestamp).toLocaleString()}`;
+      setButtons(true);
+      copyBtn.disabled = false;
+    }
+
+    function handleError(err) {
+      const messages = {
+        1: 'Permission denied. Please allow location access.',
+        2: 'Position unavailable. Try moving outside or enabling GPS.',
+        3: 'Timeout getting position. Try again.'
+      };
+      statusEl.textContent = messages[err.code] || `Error: ${err.message}`;
+      setButtons(false);
+    }
+
+    startBtn.addEventListener('click', () => {
+      if (!('geolocation' in navigator)) {
+        statusEl.textContent = 'Geolocation is not supported by this browser.';
+        return;
+      }
+      statusEl.textContent = 'Requesting location…';
+      watchId = navigator.geolocation.watchPosition(handlePosition, handleError, {
+        enableHighAccuracy: true,
+        timeout: 15000,
+        maximumAge: 0
+      });
+      setButtons(true);
+    });
+
+    stopBtn.addEventListener('click', () => {
+      if (watchId !== null) {
+        navigator.geolocation.clearWatch(watchId);
+        watchId = null;
+      }
+      statusEl.textContent = 'Tracking stopped. Default: Myanmar map.';
+      // Reset to Myanmar view
+      mapEl.src = "https://www.google.com/maps?q=21.9162,95.9560&z=6&output=embed";
+      setButtons(false);
+    });
+
+    copyBtn.addEventListener('click', async () => {
+      if (!lastCoords) return;
+      const text = `${lastCoords.latitude.toFixed(6)},${lastCoords.longitude.toFixed(6)}`;
+      try {
+        await navigator.clipboard.writeText(text);
+        statusEl.textContent = `Copied: ${text}`;
+      } catch {
+        statusEl.textContent = 'Could not copy to clipboard.';
+      }
+    });
+
+    // Initialize
+    setButtons(false);
+  </script>
   </main>
+  
 
   <footer>
     <p>Powred by Nay Thit Oo _5.9.2025</p>
   </footer>
 </body>
 </html>
+
 
 
 
